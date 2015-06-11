@@ -12,25 +12,38 @@ namespace BandStreamProcessor
         public event EventHandler ReverseWaveDetected;
         Subject<IBandAccelerometerReading> rx = new Subject<IBandAccelerometerReading>();
 
+        //Track the last event so we can avoid duplicates
+        private DateTime _lastEvent = DateTime.UtcNow;
+
         public WaveGestureDetector()
         {
             var wave = rx.Where(x => x.AccelerationY > 3);
             wave.Subscribe(x =>
             {
-                var eh = WaveDetected;
-                if(eh != null)
+                if (DateTime.UtcNow.Subtract(_lastEvent) > TimeSpan.FromSeconds(1.0))
                 {
-                    eh(this, EventArgs.Empty);
+                    _lastEvent = DateTime.UtcNow;
+         
+                    var eh = WaveDetected;
+                    if (eh != null)
+                    {
+                        eh(this, EventArgs.Empty);
+                    }
                 }
             });
 
             var reverseWave = rx.Where(x => x.AccelerationY < -3);
             reverseWave.Subscribe(x =>
             {
-                var eh = ReverseWaveDetected;
-                if (eh != null)
+                if (DateTime.UtcNow.Subtract(_lastEvent) > TimeSpan.FromSeconds(1.0))
                 {
-                    eh(this, EventArgs.Empty);
+                    _lastEvent = DateTime.UtcNow;
+
+                    var eh = ReverseWaveDetected;
+                    if (eh != null)
+                    {
+                        eh(this, EventArgs.Empty);
+                    }
                 }
             });
         }
