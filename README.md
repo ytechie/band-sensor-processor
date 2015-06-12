@@ -1,6 +1,6 @@
 # band-sensor-processor
 
-A library for turning the Band event streams into event using Reactive Extensions.
+A library for detecting Microsoft Band gestures using gyroscope streams using Reactive Extensions.
 
 ## License
 
