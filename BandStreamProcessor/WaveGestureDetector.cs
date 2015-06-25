@@ -1,8 +1,9 @@
-﻿using Microsoft.Band.Sensors;
+﻿using Microsoft.Band;
 using System;
 using System.Linq;
 using System.Reactive.Subjects;
 using System.Reactive.Linq;
+using Microsoft.Band.Portable.Sensors;
 
 namespace BandStreamProcessor
 {
@@ -10,7 +11,7 @@ namespace BandStreamProcessor
     {
         public event EventHandler WaveDetected;
         public event EventHandler ReverseWaveDetected;
-        Subject<IBandAccelerometerReading> rx = new Subject<IBandAccelerometerReading>();
+        Subject<BandAccelerometerReading> rx = new Subject<BandAccelerometerReading>();
 
         //Track the last event so we can avoid duplicates
         private DateTime _lastEvent = DateTime.UtcNow;
@@ -48,7 +49,7 @@ namespace BandStreamProcessor
             });
         }
 
-        public void AddAccelerometerReading(IBandAccelerometerReading accelerometerReading)
+        public void AddAccelerometerReading(BandAccelerometerReading accelerometerReading)
         {
             rx.OnNext(accelerometerReading);
         }
